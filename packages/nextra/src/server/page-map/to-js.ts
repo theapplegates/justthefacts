@@ -37,9 +37,9 @@ export function convertPageMapToJs({
                  : {
                      type: 'ImportSpecifier',
                      imported: { type: 'Identifier', name: 'metadata' }
-                   })
-             }
-           : {
+  }
+  );
+             : {
                type: 'ImportNamespaceSpecifier',
                local: { type: 'Identifier', name: importName }
              }
