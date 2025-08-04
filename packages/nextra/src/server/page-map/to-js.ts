@@ -17,34 +17,37 @@ export function convertPageMapToJs({
 }): string {
   const imports: Import[] = []
   const pageMapAst = convertPageMapToAst(pageMap, imports)
-  const importsAst: ImportDeclaration[] = imports.map(
-    ({ filePath, importName }) => {
-      const isMdx = MARKDOWN_EXTENSION_RE.test(filePath)
-      const isMeta = META_RE.test(filePath)
-      return {
-        type: 'ImportDeclaration',
-        source: {
-          type: 'Literal',
-          // Add resource query only for `.md`, `.mdx` files
-          value: `private-next-root-dir/${filePath}${isMdx ? METADATA_ONLY_RQ : ''}`
-        },
-        specifiers: [
-          isMeta || isMdx
-            ? {
-                local: { type: 'Identifier', name: importName },
-                ...(isMeta
-                  ? { type: 'ImportDefaultSpecifier' }
-                  : {
-                      type: 'ImportSpecifier',
-                      imported: { type: 'Identifier', name: 'metadata' }
-                    })
-              }
-            : {
-                type: 'ImportNamespaceSpecifier',
-                local: { type: 'Identifier', name: importName }
-              }
-        ]
-      }
+ const importsAst: ImportDeclaration[] = imports.map(
+   ({ filePath, importName }) => {
+     const isMdx = MARKDOWN_EXTENSION_RE.test(filePath)
+     const isMeta = META_RE.test(filePath)
+     return {
+       type: 'ImportDeclaration',
+       source: {
+         type: 'Literal',
+         // Add resource query only for `.md`, `.mdx` files
+         value: `private-next-root-dir/${filePath}${isMdx ? METADATA_ONLY_RQ : ''}`
+       },
+       specifiers: [
+         isMeta || isMdx
+           ? {
+               local: { type: 'Identifier', name: importName },
+               ...(isMeta
+                 ? { type: 'ImportDefaultSpecifier' }
+                 : {
+                     type: 'ImportSpecifier',
+                     imported: { type: 'Identifier', name: 'metadata' }
+                   })
+             }
+           : {
+               type: 'ImportNamespaceSpecifier',
+               local: { type: 'Identifier', name: importName }
+             }
+       ],
+       attributes: [] // 👈 REQUIRED for ImportDeclaration
+     }
+   }
+ )
     }
   )
 
