@@ -51,7 +51,7 @@ export function createImportsAst(imports: ImportItem[]): ImportDeclaration[] {
   })
 }
 // TEMPORARY stub to unblock the build
-export function convertPageMapToJs(input: unknown): unknown {
-  console.warn('[convertPageMapToJs] is a stub. You should implement or remove it.');
-  return input;
+export function convertPageMapToJs(input: unknown): string {
+  // Temporary placeholder until implemented
+  return '';
 }
