@@ -50,8 +50,3 @@ export function createImportsAst(imports: ImportItem[]): ImportDeclaration[] {
     }
   })
 }
-// TEMPORARY stub to unblock the build
-export function convertPageMapToJs(input: unknown): string {
-  // Temporary placeholder until implemented
-  return '';
-}
