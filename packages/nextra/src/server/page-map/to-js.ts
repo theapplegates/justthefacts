@@ -1,86 +1,52 @@
-import type { ImportDeclaration } from 'estree'
-import { toJs } from 'estree-util-to-js'
-import type { Import, TItem } from '../../types.js'
-import { MARKDOWN_EXTENSION_RE, METADATA_ONLY_RQ } from '../constants.js'
-import { convertPageMapToAst } from './to-ast.js'
+import type {
+  ImportDeclaration,
+  ImportSpecifier,
+  ImportNamespaceSpecifier,
+  ImportDefaultSpecifier,
+  ExpressionStatement,
+  CallExpression,
+  MemberExpression,
+  Identifier,
+  Literal
+} from 'estree'
 
-const META_RE = /_meta\.[jt]sx?$/
+import { MARKDOWN_EXTENSION_RE, META_RE, METADATA_ONLY_RQ } from './constants'
 
-export function convertPageMapToJs({
-  pageMap,
-  mdxPages,
-  globalMetaPath
-}: {
-  pageMap: TItem[]
-  mdxPages: Record<string, string>
-  globalMetaPath?: string
-}): string {
-  const imports: Import[] = []
-  const pageMapAst = convertPageMapToAst(pageMap, imports)
- const importsAst: ImportDeclaration[] = imports.map(
-   ({ filePath, importName }) => {
-     const isMdx = MARKDOWN_EXTENSION_RE.test(filePath)
-     const isMeta = META_RE.test(filePath)
-     return {
-       type: 'ImportDeclaration',
-       source: {
-         type: 'Literal',
-         // Add resource query only for `.md`, `.mdx` files
-         value: `private-next-root-dir/${filePath}${isMdx ? METADATA_ONLY_RQ : ''}`
-       },
-       specifiers: [
-         isMeta || isMdx
-           ? {
-               local: { type: 'Identifier', name: importName },
-               ...(isMeta
-                 ? { type: 'ImportDefaultSpecifier' }
-                 : {
-                     type: 'ImportSpecifier',
-                     imported: { type: 'Identifier', name: 'metadata' }
-  }
-  );
-             : {
-               type: 'ImportNamespaceSpecifier',
-               local: { type: 'Identifier', name: importName }
-             }
-       ],
-       attributes: [] // 👈 REQUIRED for ImportDeclaration
-     }
-   }
- )
+interface ImportItem {
+  filePath: string
+  importName: string
+}
+
+export function createImportsAst(imports: ImportItem[]): ImportDeclaration[] {
+  return imports.map(({ filePath, importName }): ImportDeclaration => {
+    const isMdx = MARKDOWN_EXTENSION_RE.test(filePath)
+    const isMeta = META_RE.test(filePath)
+
+    const specifier: ImportSpecifier | ImportNamespaceSpecifier | ImportDefaultSpecifier =
+      isMeta
+        ? {
+            type: 'ImportDefaultSpecifier',
+            local: { type: 'Identifier', name: importName }
+          }
+        : isMdx
+        ? {
+            type: 'ImportSpecifier',
+            imported: { type: 'Identifier', name: 'metadata' },
+            local: { type: 'Identifier', name: importName }
+          }
+        : {
+            type: 'ImportNamespaceSpecifier',
+            local: { type: 'Identifier', name: importName }
+          }
+
+    return {
+      type: 'ImportDeclaration',
+      source: {
+        type: 'Literal',
+        value: `private-next-root-dir/${filePath}${isMdx ? METADATA_ONLY_RQ : ''}`
+      },
+      specifiers: [specifier],
+      attributes: [] // <- required by TypeScript
     }
-  )
-
-  const importsResult = toJs({
-    type: 'Program',
-    sourceType: 'module',
-    body: importsAst
   })
-
-  const pageMapResult = toJs({
-    type: 'Program',
-    sourceType: 'module',
-    body: [{ type: 'ExpressionStatement', expression: pageMapAst }]
-  })
-
-  let pageMapRawJs = pageMapResult.value.slice(0, -2 /* replace semicolon */)
-  if (globalMetaPath) {
-    pageMapRawJs = `mergeMetaWithPageMap(${pageMapRawJs}, globalMeta, true)`
-  }
-
-  const rawJs = `import { ${[
-    'normalizePageMap',
-    globalMetaPath && 'mergeMetaWithPageMap',
-    imports.some(
-      o => !MARKDOWN_EXTENSION_RE.test(o.filePath) && !META_RE.test(o.filePath)
-    ) && 'getMetadata'
-  ]
-    .filter(Boolean)
-    .join(', ')} } from 'nextra/page-map'
-${globalMetaPath ? `import globalMeta from 'private-next-root-dir/${globalMetaPath}'` : ''}
-${importsResult.value}
-export const pageMap = normalizePageMap(${pageMapRawJs})
-
-export const RouteToFilepath = ${JSON.stringify(mdxPages, null, 2)}`
-  return rawJs
 }
