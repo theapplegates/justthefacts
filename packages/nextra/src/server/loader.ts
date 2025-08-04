@@ -11,6 +11,7 @@ import { convertPageMapToJs } from './page-map/to-js.js'
 import { convertToPageMap } from './page-map/to-page-map.js'
 import { twoslashRenderer } from './twoslash.js'
 import { logger } from './utils.js'
+import { convertPageMapToJs } from './page-map/convert-page-map-to-js';
 
 const NOW = Date.now()
 const APP_DIR = findPagesDir(CWD).appDir!
