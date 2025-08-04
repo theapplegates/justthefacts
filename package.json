@@ -1,0 +1,34 @@
+{
+  "name": "nextra-monorepo",
+  "private": true,
+  "packageManager": "pnpm@9.15.9",
+  "scripts": {
+    "build": "turbo run build --filter=./packages/\\*",
+    "build:all": "turbo run build",
+    "clean": "rm -rf .turbo && pnpm -r exec sh -c 'rm -rf dist .next .turbo'",
+    "dev": "turbo run dev --filter=./packages/\\*",
+    "dev:theme-blog": "turbo run dev --filter=example-blog... --filter=!docs",
+    "dev:theme-docs": "turbo run dev --filter=example-docs... --filter=!docs",
+    "dev:theme-i18n": "turbo run dev --filter=swr-site... --filter=!docs",
+    "dev:website": "turbo run dev --filter=docs...",
+    "lint": "ESLINT_USE_FLAT_CONFIG=true eslint --config packages/eslint-config/src/index.ts --cache --max-warnings 0 .",
+    "lint:prettier": "prettier --config packages/prettier-config/src/index.js --cache --check --ignore-path .gitignore --ignore-path .prettierignore .",
+    "postinstall": "pnpm build",
+    "prettier": "pnpm lint:prettier --write",
+    "release": "changeset publish",
+    "test": "turbo run test",
+    "types:check": "turbo run types:check",
+    "version": "changeset version"
+  },
+  "devDependencies": {
+    "@changesets/cli": "2.29.4",
+    "@rollup/plugin-alias": "5.1.1",
+    "eslint": "9.29.0",
+    "prettier": "3.5.3",
+    "rimraf": "6.0.1",
+    "tsup": "8.4.0",
+    "tsx": "4.20.3",
+    "turbo": "2.5.5",
+    "typescript": "5.8.3"
+  }
+}

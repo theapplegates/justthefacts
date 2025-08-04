@@ -1,0 +1,61 @@
+# Node.js dependencies
+node_modules/
+.pnpm/
+
+# Build output
+dist/
+.next/
+.turbo/
+turbo/
+out/
+build/
+
+# System junk
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs and temp files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.tsbuildinfo
+
+# IDE / editor
+.vscode/
+.idea/
+*.sw?
+*.sublime-project
+*.sublime-workspace
+
+# OS or CLI metadata
+*.bak
+*.orig
+*.patch
+*.rej
+*.tmp
+
+# Mac trash
+.Trashes
+
+# Optional: lockfiles if using only pnpm
+yarn.lock
+package-lock.json
+
+# JetBrains IDEs
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Optional: ignore test output if you generate snapshots
+__snapshots__/
+
+# Git hooks or misc local scripts
+.husky/
