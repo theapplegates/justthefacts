@@ -7,8 +7,6 @@ import { compileMetadata } from './compile-metadata.js'
 import { compileMdx } from './compile.js'
 import { CWD, IS_PRODUCTION, METADATA_ONLY_RQ } from './constants.js'
 import { findMetaAndPageFilePaths } from './page-map/find-meta-and-page-file-paths.js'
-import { convertPageMapToJs } from './page-map/to-js.js'
-import { convertToPageMap } from './page-map/to-page-map.js'
 import { twoslashRenderer } from './twoslash.js'
 import { logger } from './utils.js'
 import { convertPageMapToJs } from './page-map/convert-page-map-to-js';
