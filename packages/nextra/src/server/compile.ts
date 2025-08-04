@@ -169,7 +169,7 @@ export async function compileMdx(
         [
           remarkLinkRewrite,
           {
-            pattern: MARKDOWN_URL_EXTENSION_RE,
+            pattern: MARKDOWN_EXTENSION_REGEX,
             replace: '',
             excludeExternalLinks: true
           }
