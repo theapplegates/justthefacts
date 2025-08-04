@@ -10,6 +10,7 @@ import { findMetaAndPageFilePaths } from './page-map/find-meta-and-page-file-pat
 import { twoslashRenderer } from './twoslash.js'
 import { logger } from './utils.js'
 import { convertPageMapToJs } from './page-map/convert-page-map-to-js';
+import { convertToPageMap } from './page-map/to-page-map.js'
 
 const NOW = Date.now()
 const APP_DIR = findPagesDir(CWD).appDir!
