@@ -1,6 +1,5 @@
 // packages/nextra/src/server/constants.ts
 
-import { MARKDOWN_EXTENSION_REGEX } from './constants.js'
 export const IS_PRODUCTION = process.env.NODE_ENV === 'production'
 
 export const CWD = process.cwd()
