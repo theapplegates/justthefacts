@@ -2,13 +2,15 @@ import fs from 'node:fs/promises'
 import { join, relative, resolve } from 'node:path'
 import { walk } from 'estree-walker'
 import { parse } from '@babel/parser'
-import type { File } from '@napi-rs/simple-git'
-import { MARKDOWN_URL_EXTENSION_RE } from '../constants.js'
-import { PageMapCache } from '../page-map/cache.js'
-import { resolvePageMap } from '../page-map/index.js'
-import { getPageThemeInfo } from '../page-map/get-page-theme-info.js'
-import { getRouteFromFile } from '../utils.js'
-import { parseFrontMatter } from '../frontmatter.js'
+
+import { MARKDOWN_URL_EXTENSION_RE } from '../constants'
+import { PageMapCache } from '../page-map/cache'
+import { resolvePageMap } from '../page-map/index'
+import { getPageThemeInfo } from '../page-map/get-page-theme-info'
+import { getRouteFromFile } from '../utils'
+import { parseFrontMatter } from '../frontmatter'
+
+type File = { name: string }
 
 export async function compile({
   files,
